@@ -1,0 +1,26 @@
+{
+  "name": "mcsp-mvp-react-project",
+  "scripts": {
+    "backend": "nodemon server/server.js",
+    "frontend": "webpack -d --watch",
+    "start": "npm run backend & npm run frontend"
+  },
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/core": "^7.4.5",
+    "@babel/preset-env": "^7.4.5",
+    "@babel/preset-react": "^7.0.0",
+    "babel-loader": "^8.0.6",
+    "css-loader": "^2.1.1",
+    "nodemon": "^1.19.0",
+    "style-loader": "^0.23.1",
+    "webpack": "^4.32.2",
+    "webpack-cli": "^3.3.2"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "pg": "^8.6.0",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6"
+  }
+}

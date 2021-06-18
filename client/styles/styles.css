@@ -1,0 +1,7 @@
+/* Reset styles to normalize behavior across browsers */
+* {
+  margin: 0;
+  padding: 0;
+  font-size: 1rem;
+  font-family: inherit;
+}
