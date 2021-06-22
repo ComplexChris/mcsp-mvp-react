@@ -7,16 +7,17 @@ import PropTypes from 'prop-types';
 const Homepage = props => {
     console.log("PROPS: ", props);
     const {form_inputs, form_defaults} = props.root_state
-    console.log(form_defaults)
+    console.log("Defaults: ", form_defaults)
     const cats = Object.keys( form_defaults.categories ) ;
     const diffs = form_defaults.difficulties ;
     return (
-        <div className={'container-header'}>
+        <div className={'form_container'}>
             <form onSubmit={props.submit_form}>
-                { createOption( {name:'category', value:form_inputs.category, vals:cats}, props.change_form) } <br/>
-                { createOption( {name:'difficulty', value:form_inputs.difficulty, vals:diffs}, props.change_form) } <br/>
+                { createOption( {name:'category', value:form_inputs.category, vals:cats, text:"Choose your Category "}, props.change_form) } <br/>
+                { createOption( {name:'difficulty', value:form_inputs.difficulty, vals:diffs, text:"Choose your Difficulty "}, props.change_form) } <br/>
                 <br/>
-                <input type="submit" value="Submit" className="submit_action"  ></input>
+                <input type="submit" value="Submit" className="submit_action"  ></input> <br/> <br/>
+                <div className={'question_container'}>Hit 'Submit' and lets test your wits!</div>
             </form>
         </div>
     );
@@ -28,13 +29,13 @@ const test = (e) => {
 
 const createOption = (options, callBack) => {
     return(
-        <label className={"input-fields"}>
-            Select Cat
+        <label className={"input_fields"}>
+            {options.text}
             <select name={options.name} value={options.value} onChange={ (e)=>callBack(e.target.name, e.target.value) }>
                 {options.vals.map( cat => <option key={cat}> {cat} </option> ) }
             </select>
         </label>
-        
+
     )
 }
 

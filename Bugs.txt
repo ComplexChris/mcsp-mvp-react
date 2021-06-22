@@ -1,0 +1,8 @@
+- Value of input box (select type) did not show selected Value
+    - Added a property in the state and dynmically changed the "options" element to the respective item
+
+- Able to select multiple Radio buttons
+    - Maintain same name for all
+
+- During a callback of a button, unable to "event.target"
+    - Changed className of the respective form element from kebab case to snake case
