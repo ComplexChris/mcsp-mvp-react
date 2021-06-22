@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import Homepage from './children/home'
 import Quiz from './children/quiz'
 import ShowResults from './children/results'
+import LeaderBoard from './children/leaderboard'
 
 const raw_categories = require('./Categories JSON.js');
 console.log( "RAW", raw_categories)
@@ -12,6 +13,7 @@ export default class App extends Component {
 
     // Initialize state.
     this.state = {
+      isLoading:false,
       user_name: "",
       user_token: "",
       current_quiz_id: 0,
@@ -23,12 +25,13 @@ export default class App extends Component {
       form_inputs : {
         category:'Any',
         difficulty:'easy',
+        user_name: ""
       },
       form_defaults: {
         categories: raw_categories,
         difficulties: ['easy', 'medium', 'hard']
       },
-      test_results: { 1234:{started:1234, score:0, total_questions:10, category:'Any', difficulty:'hard'} }
+      test_results: { 1234:{started:1234, score:0, total_questions:10, category:'Any', difficulty:'hard', percentage:0} }
     };
     this.state_defaults = {...this.state}
   }
@@ -38,7 +41,7 @@ export default class App extends Component {
   }
   change_form (key, val) {
     this.setState( {form_inputs: {...this.state.form_inputs, [key]:val}}, ()=>{
-      console.log("New State: ", this.state)
+      // console.log("New State: ", this.state)
     } )
   }
 
@@ -49,10 +52,31 @@ export default class App extends Component {
       .then((response) => response.json())
       .then((data) => this.setState( {'quiz_master':data}, callBack ));
   }
+  do_post(quiz_data){
+    fetch('/api/submit_quiz', {
+      method: 'post',
+      headers: {
+        'Accept': 'application/json, text/plain, */*',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify( quiz_data )
+    }).then(res => res.json())
+      .then(res => console.log(res));
+  }
 
   submit_form(e){
     // Starts the quiz
-    console.log('A name was submitted: ', this.state);
+    this.setState( {
+      isLoading: true
+      }, ()=> {
+        setTimeout(() => {
+          this.init_quiz()
+        }, 4200);
+      } )
+    e.preventDefault();
+  }
+  init_quiz(){
+    // console.log('A name was submitted: ', this.state);
     const test = this.do_fetch( this.create_URL(), ()=> {
       if( this.state.quiz_master.response_code !== 0){
         alert("Sorry pal, I couldn't make you a quiz right now.");
@@ -66,18 +90,26 @@ export default class App extends Component {
         score:0,
         total_questions:this.state.quiz_master.results.length
       }
-      this.setState( {
+      this.setState({
         test_results: {...temp_state},
         current_quiz_id: now,
-        page:'QUIZ'
-      } )
-    } )
-    e.preventDefault();
+        page:'QUIZ'}
+      ) } )
   }
 
   submit_quiz( score, raw_data ){
     // Grades quiz and resets state defaults
     console.log("QUIZ SUBMITTED: ", score)
+
+    const current_quiz = this.state.test_results[ this.state.current_quiz_id ];
+    this.state.test_results[ this.state.current_quiz_id ] = {
+      ...current_quiz,
+      totalTime: Date.now() - this.state.current_quiz_id ,
+      score: score,
+      percentage: Math.ceil((score/this.state.quiz_master.results.length)*100)
+    }
+    this.do_post( this.state.test_results[ this.state.current_quiz_id ] )
+
     //const current_question = this.state.current_quiz_id;
     //this.reset_state( score )
     const quiz_master = {
@@ -94,13 +126,8 @@ export default class App extends Component {
 
   reset_state( score ){
     // Resets the state to defaults but keeps the submitted test cached
-    const current_quiz = this.state.test_results[ this.state.current_quiz_id ];
     const new_state = {...this.state_defaults, } ;
-    new_state.test_results[ this.state.current_quiz_id ] = {
-      ...current_quiz,
-      totalTime: Date.now() - this.state.current_quiz_id ,
-      score: score
-    }
+    new_state.test_results = { ...this.state.test_results }
 
     console.log("NEW STATE: ", new_state)
     this.setState( {
@@ -112,11 +139,13 @@ export default class App extends Component {
   }
 
   create_URL(){
-    let link = "https://opentdb.com/api.php?amount=1"
+    let link = "https://opentdb.com/api.php?amount=2"
     const conv = (key) => this.state.form_defaults.categories[key]
     Object.keys( this.state.form_inputs ).map( (key) => {
-      const val = this.state.form_inputs[key]
-      link += `&${key}=${ (key=='category') ? conv(val) : val }`
+      if(key!=="user_name"){
+        const val = this.state.form_inputs[key]
+        link += `&${key}=${ (key=='category') ? conv(val) : val }`
+      }
     } )
     return link
   }
@@ -126,17 +155,17 @@ export default class App extends Component {
   }
 
   componentDidMount() {
-
+    console.clear()
   }
 
   getPage(){
-    console.log("PAGE: ", this.state.page)
     switch( this.state.page) {
       case "HOME":
         // Can do additional stuff if page was "HOME"
       default:
-        return <Homepage root_state={this.state} change_form={this.change_form.bind(this) }  submit_form={this.submit_form.bind(this)} />
-
+        return (
+            <Homepage isLoading={this.state.isLoading} root_state={this.state} change_form={this.change_form.bind(this) }  submit_form={this.submit_form.bind(this)} />
+      )
       case "QUIZ":
         return <Quiz questions={this.state.quiz_master.results} submit_quiz={this.submit_quiz.bind(this)} />
 
@@ -147,16 +176,22 @@ export default class App extends Component {
   }
 }
 
+getLeaderBoard(){
+  return(
+    (this.state.page=='HOME') ?
+      <LeaderBoard /> :
+      <div/>
+  )
+}
+
   render() {
 
     console.log("APP.js RENDERED: ", this.state)
-    console.log("Results: ", ShowResults)
     return (
-    <div className={'app_container'} >
-      {
-        this.getPage()
-      }
-    </div>
+      <div className={'app_container'} >
+        { this.getPage() }
+        { this.getLeaderBoard() }
+      </div>
     )
   }
 }

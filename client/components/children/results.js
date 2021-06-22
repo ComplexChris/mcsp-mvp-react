@@ -4,7 +4,7 @@ import React from 'react';
 function make_question(question, question_index, their_answer, amount){
   const choices = question.structure ;
   const correct = question.correct_answer
-  console.log("MAKING QUESTION... ", question_index, correct, question, choices )
+  // console.log("MAKING QUESTION... ", question_index, correct, question, choices )
   return(
       <div id={`Question-${question_index}`} key={`Question-${question_index}`} >
           <form key={question_index} id={question_index} className={'question_container'}  >
@@ -32,7 +32,7 @@ function make_question(question, question_index, their_answer, amount){
 
 const ShowResults = props => {
   //console.log("Categories.js PROPS: ", props)
-  console.log("RESULTS PROPS: ", props)
+  // console.log("RESULTS PROPS: ", props)
   const amount = props.quiz_master.results.length
   const percentage = Math.ceil( (props.quiz_master.score/amount)*100 )
   return (
@@ -40,6 +40,7 @@ const ShowResults = props => {
         {/* {this.state.questions} */}
         {/* { Map function to iterate over Array of all questions} */ }
         <h1> {`${(percentage<70)?'FAILED':'PASSED'} - You got ${props.quiz_master.score} out of ${amount} (%${percentage})`} </h1>
+        <br/><hr/> <br/>
         {
             props.quiz_master.results.map( (question, index) => {
               const their_answer = props.quiz_master.their_answers[index]

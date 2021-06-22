@@ -46,7 +46,6 @@ export default class Quiz extends Component {
     check_answer(){
         let points = 0
         for(let key in this.state.answered_questions){
-            console.log("KEY: ", key)
             points += (this.state.answered_questions[key] == this.state.questions[key].correct_answer ) ? 1 : 0 ;
         }
         return points;
@@ -64,8 +63,6 @@ export default class Quiz extends Component {
     }
 
     make_question(question, question_index){
-        console.log("MAKING QUESTION... ", question_index, question )
-
         const choices = this.getChoices(question, question_index)
         const [ value, callBack ] = (this.state.current_question < this.state.questions.length-1) ?
                         ["Next", this.navigate.bind(this)] : ["Finish", this.finish.bind(this)]
