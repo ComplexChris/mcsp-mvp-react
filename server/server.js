@@ -2,6 +2,9 @@ const express = require("express");
 const db = require("./db/config");
 const fetch = require('node-fetch');
 const cors = require('cors');
+const path = require('path');
+
+require('dotenv').config() // TODO: ADD THIS LINE
 
 class Server{
 
