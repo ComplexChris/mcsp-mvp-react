@@ -32,8 +32,8 @@ const Homepage = props => {
                 { createOption( {name:'category', value:form_inputs.category, vals:cats, text:"Choose your Category "}, props.change_form) } <br/>
                 { createOption( {name:'difficulty', value:form_inputs.difficulty, vals:diffs, text:"Choose your Difficulty "}, props.change_form) } <br/>
 
-                <label for="quantity" className={"input_fields"}>
-                    Quantity (Between 1 and 50): <input value='10' className='input_box' name="amount" id="amount" type="number" min="1" max="50" onChange={ change }  />
+                <label htmlFor="quantity" className={"input_fields"}>
+                    Quantity (Between 1 and 50): <input value={form_inputs.amount} className='input_box' name="amount" id="amount" type="number" min="1" max="50" onChange={ change }  />
                 </label>
                 <br/>
                 <label htmlFor="user_name" className={"input_fields"}>

@@ -25,11 +25,12 @@ export default class App extends Component {
       form_inputs : {
         category:'Any',
         difficulty:'easy',
-        user_name: ""
+        user_name: "",
+        amount: 10
       },
       form_defaults: {
         categories: raw_categories,
-        difficulties: ['easy', 'medium', 'hard']
+        difficulties: ['Any', 'easy', 'medium', 'hard']
       },
       test_results: { 1234:{started:1234, score:0, total_questions:10, category:'Any', difficulty:'hard', percentage:0} }
     };
@@ -80,6 +81,7 @@ export default class App extends Component {
     const test = this.do_fetch( this.create_URL(), ()=> {
       if( this.state.quiz_master.response_code !== 0){
         alert("Sorry pal, I couldn't make you a quiz right now.");
+        this.reset_state();
         return;
       }
       const now = Date.now() ;

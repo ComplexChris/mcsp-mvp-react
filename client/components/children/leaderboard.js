@@ -6,6 +6,7 @@ export default class LeaderBoard extends Component {
     constructor(props){
         super(props);
         this.state = {...props, scores:[]}
+        this.getData()
     }
     getData(){
         fetch( '/api/highscores' )
@@ -17,7 +18,7 @@ export default class LeaderBoard extends Component {
     }
 
     componentDidMount(){
-        this.getData()
+
     }
 
     render(){
