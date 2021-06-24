@@ -19,10 +19,12 @@ class Server{
     app.use(express.json());
     app.use(cors());
 
-    app.get('/', (req, res) => {
-      console.log("RUNNING TEST...")
-      res.send("TEST")
-    })
+    // Declare the relative path to the public HTML folder
+    app.use(express.static( path.join(__dirname, 'public' ) ));
+    app.get('/', (req, res)=>{
+      console.log("HOME DIRECTORY");
+      res.sendFile( path.join(__dirname, "./public/index.html") )
+  })
 
     app.post("/api/submit_quiz", (req, res) => {
       console.log( "BODY: ", req.body )
