@@ -19,6 +19,11 @@ class Server{
     app.use(express.json());
     app.use(cors());
 
+    app.get('/', (req, res) => {
+      console.log("RUNNING TEST...")
+      res.send("TEST")
+    })
+
     app.post("/api/submit_quiz", (req, res) => {
       console.log( "BODY: ", req.body )
       const query = `INSERT INTO quiz_results
